@@ -7,7 +7,7 @@
   tasks:
     - name: Launch Faucet Instance
       ec2:
-        id: faucet-server-v4
+        id: faucet-server-v1
         key_name: faucet-key-pair
         image: ami-14c5486b
         group_id: sg-055149c7d6b300d72
@@ -51,12 +51,6 @@
       pip:
         name: docker-compose==1.21.2
         state: latest
-
-    - name: Setup Certbot nginx
-      pip:
-        name: certbot-nginx
-        state: latest
-        extra_args: --user
 
     - name: Start Docker Service
       become: yes

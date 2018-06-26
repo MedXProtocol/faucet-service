@@ -19,8 +19,3 @@
         build: yes
         state: present
         restarted: True
-
-    - name: Copy the Certbot script
-      synchronize:
-        src: run-certbot.sh
-        dest: /home/ec2-user/faucet-service/run-certbot.sh

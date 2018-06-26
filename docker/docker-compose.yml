@@ -1,12 +1,12 @@
 version: "3"
 services:
-  facuet:
+  faucet:
     env_file:
-      - ../facuet-service.env
-    build: './facuet'
+      - ../faucet-service.env
+    build: './faucet'
     volumes:
-      - "/docker/var/facuet/export:/export"
-      - "/docker/var/facuet/data:/data/facuet"
+      - "/docker/var/faucet/export:/export"
+      - "/docker/var/faucet/data:/data/faucet"
     ports:
       - 4001:4001
       - 8080:8080
@@ -16,7 +16,7 @@ services:
       - /docker/certs/letsencrypt:/etc/letsencrypt:ro
       - /docker/var/log/nginx:/var/log/nginx
       - /docker/var/www/letsencrypt:/var/www/letsencrypt
-      - /docker/etc/nginx/conf.d:/etc/nginx/conf.d/facuet-service
+      - /docker/etc/nginx/conf.d:/etc/nginx/conf.d/faucet-service
     ports:
       - 80:80
       - 443:443

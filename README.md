@@ -104,10 +104,6 @@ ansible-playbook setup-playbook.yml
 ```bash
 ansible-playbook update-playbook.yml
 ```
-4. To update the HTTPS configuration run:
-```bash
-ansible-playbook update-https-playbook.yml
-```
 
 # Connecting to Faucet
 
