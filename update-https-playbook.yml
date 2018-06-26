@@ -1,0 +1,19 @@
+---
+- name: Request new SSL certificate and update Nginx
+  hosts: facuet-server
+  tasks:
+    # - name: Run the Certbot script
+    #   shell: /home/ec2-user/facuet-service/run-certbot.sh
+
+    - name: Update the NGINX config
+      become: True
+      synchronize:
+        src: nginx.conf.d/https-proxy.conf
+        dest: /docker/etc/nginx/conf.d/proxy.conf
+
+    - name: Restart the Docker containers
+      docker_service:
+        project_src: /home/ec2-user/facuet-service/docker
+        build: yes
+        state: present
+        restarted: True

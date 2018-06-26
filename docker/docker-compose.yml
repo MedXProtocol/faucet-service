@@ -1,0 +1,23 @@
+version: "3"
+services:
+  facuet:
+    env_file:
+      - ../facuet-service.env
+    build: './facuet'
+    volumes:
+      - "/docker/var/facuet/export:/export"
+      - "/docker/var/facuet/data:/data/facuet"
+    ports:
+      - 4001:4001
+      - 8080:8080
+  nginx:
+    build: './nginx-custom'
+    volumes:
+      - /docker/certs/letsencrypt:/etc/letsencrypt:ro
+      - /docker/var/log/nginx:/var/log/nginx
+      - /docker/var/www/letsencrypt:/var/www/letsencrypt
+      - /docker/etc/nginx/conf.d:/etc/nginx/conf.d/facuet-service
+    ports:
+      - 80:80
+      - 443:443
+      - 5001:5001

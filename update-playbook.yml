@@ -1,0 +1,26 @@
+---
+- name: Compose the Docker containers
+  hosts: faucet-server
+  tasks:
+    - name: Copy the Docker configuration to the server
+      synchronize:
+        src: docker
+        dest: /home/ec2-user/faucet-service
+        recursive: True
+        delete: True
+
+    - name: Copy the faucet service environment to the server
+      synchronize:
+        src: faucet-service.env
+        dest: /home/ec2-user/faucet-service/faucet-service.env
+
+    - docker_service:
+        project_src: /home/ec2-user/faucet-service/docker
+        build: yes
+        state: present
+        restarted: True
+
+    - name: Copy the Certbot script
+      synchronize:
+        src: run-certbot.sh
+        dest: /home/ec2-user/faucet-service/run-certbot.sh

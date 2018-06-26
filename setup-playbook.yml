@@ -1,0 +1,72 @@
+# Creates a new EC2 instance for the Faucet server.
+# This config expects an Elastic IP to have been defined at 34.230.142.160
+---
+- name: Create an EC2 instance
+  hosts: local
+  become: False
+  tasks:
+    - name: Launch Faucet Instance
+      ec2:
+        id: faucet-server-v4
+        key_name: faucet-key-pair
+        image: ami-14c5486b
+        group_id: sg-055149c7d6b300d72
+        instance_type: t2.micro
+        region: us-east-1
+        state: present
+      register: ec2
+    - name: Associate Elastic IP
+      ec2_eip:
+        allow_reassociation: true
+        device_id: "{{ ec2.instance_ids[0] }}"
+        public_ip: 34.230.142.160
+        region: us-east-1
+
+- name: Setup the Faucet server for Docker
+  hosts: faucet-server
+  tasks:
+    - name: Update server
+      become: yes
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Ensure pip is latest
+      pip:
+        name: pip
+        state: latest
+
+    - name: Install requests
+      pip:
+        name: requests
+        state: present
+
+    - name: Install Docker
+      become: yes
+      yum:
+        name: docker
+        state: present
+
+    - name: Install docker python module
+      pip:
+        name: docker-compose==1.21.2
+        state: latest
+
+    - name: Setup Certbot nginx
+      pip:
+        name: certbot-nginx
+        state: latest
+        extra_args: --user
+
+    - name: Start Docker Service
+      become: yes
+      service:
+        name: docker
+        state: started
+
+    - name: Add ec2-user to docker group
+      become: yes
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
