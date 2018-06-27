@@ -107,7 +107,7 @@ ansible-playbook update-playbook.yml
 
 # Connecting to Faucet
 
-Once the service is running, you can connect to Faucet as you would normally.  The container exposes the ports 4001, 4002, 5001 and 8080.
+Once the service is running, you can connect to Faucet as you would normally. The container exposes the port 8080 and proxies traffic to port 80.
 
 ## Troubleshooting
 

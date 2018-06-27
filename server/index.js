@@ -1,10 +1,6 @@
-console.log('val:', process.env.FAUCET_CONFIG_PRIVKEY);
-
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({path: '../faucet-service.env'})
+  require('dotenv').config({ path: '../faucet-service.env' })
 }
-
-console.log('val:', process.env.FAUCET_CONFIG_PRIVKEY);
 
 var express = require('express');
 var request = require('request');
@@ -32,5 +28,6 @@ app.get('/', function (req, res) {
 
 })
 
-app.listen(3000)
+// app.listen(3000)
 console.log('listening on 3000')
+http.createServer(app).listen(8080);
