@@ -31,7 +31,7 @@ var txData = web3.eth.abi.encodeFunctionCall({
 //      "data"      : txData
 // }).then(console.log)
 
-var rawTx = {
+var txObject = {
   to: contractAddress,
   // value: web3.utils.toHex("1000"), // adding value to send to contract throws out of gas error
   data: txData,
@@ -40,9 +40,35 @@ var rawTx = {
   from: contractOwnerAddress
 }
 
-web3.eth.accounts.signTransaction(rawTx, privateKey).then((result) => {
-  console.log(result);
-  rawTx = result.rawTransaction
-});
+async function signTransaction(txObject, privateKey) {
+  var rawTx
 
-web3.eth.sendSignedTransaction(rawTx).on('transactionHash', function(a) {console.log(a)}).on('error', console.error).on('receipt', function(a) {console.log(a)}).on('confirmation', function(a) {console.log(a)});
+  await web3.eth.accounts.signTransaction(rawTx, privateKey)
+    .then((result) => {
+      console.log(result);
+      rawTx = result.rawTransaction
+    });
+
+  return rawTx
+}
+
+function sendSignedTransaction(rawTx) {
+  web3.eth.sendSignedTransaction(rawTx)
+    .on('transactionHash', function(a) {console.log(a)})
+    .on('error', console.error)
+    .on('receipt', function(a) {console.log(a)})
+    .on('confirmation', function(a) {console.log(a)});
+}
+
+module.exports = {
+  sendEther: function(ethAddress) {
+    return "HELLO";
+  },
+
+  sendToken: function(ethAddress) {
+
+    sendSignedTransaction(rawTx);
+
+    return "Hola";
+  }
+};

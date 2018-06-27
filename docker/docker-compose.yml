@@ -6,9 +6,6 @@ services:
       - /docker/var/log/redis:/var/log/redis
       - /docker/usr/local/var/db/redis:/usr/local/var/db/redis
   express-server:
-    environment:
-      NODE_ENV: production
-      REDIS_HOST: redis://redis:6379
     env_file:
       - ../faucet-service.env
     build: './express-server'

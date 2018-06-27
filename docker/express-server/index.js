@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({ path: '../faucet-service.env' })
 }
-
+var sendSignedTransactionService = require('send-signed-transaction-service');
 var express = require('express');
 var request = require('request');
 var http = require('http');
@@ -22,17 +22,30 @@ app.use(bodyParser.urlencoded({ extended: true }));     // for parsing applicati
 app.set('trust proxy', true);
 app.set('trust proxy', 'loopback');
 
-app.get('/', function (req, res) {
-  res.send('Eth Faucet Up' + 'Contract address: ' + process.env.FAUCET_CONFIG_MEDXTOKEN_CONTRACT_ADDRESS +
+app.get('/', function (request, response) {
+  response.send('Eth Faucet Up' + 'Contract address: ' + process.env.FAUCET_CONFIG_MEDXTOKEN_CONTRACT_ADDRESS +
   'FAUCET Node Url: ' + process.env.FAUCET_CONFIG_ETH_NODE_URL)
-  console.log(req);
 })
 
-app.post('/drip/:ethAddress', function (req, res) { // (\d+)0x00000000000000000000000
-  res.send(req.params)
-  console.log(req.params)
-  res.send('Hello World')
-  console.log(req);
+app.post('/drip/:ethAddress', async function (request, response) { // (\d+)0x00000000000000000000000
+  new Promise(
+    (resolve, reject) => {
+      // await var etherReceipt = sendSignedTransactionService.sendEther(request.params.ethAddress)
+      await var tokenReceipt = sendSignedTransactionService.sendToken(request.params.ethAddress)
+
+      if (etherReceipt && tokenReceipt) {
+        console.log('success')
+        resolve('sent!')
+      }
+      else {
+        console.log('error')
+        reject('error!')
+      }
+    }
+  ).then((result, b) => {
+    console.log(result, b)
+    response.send(request.params.ethAddress)
+  })
 })
 
 http.createServer(app).listen(process.env.PORT || 8080, function() {
