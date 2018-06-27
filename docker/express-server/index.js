@@ -23,7 +23,7 @@ app.set('trust proxy', true);
 app.set('trust proxy', 'loopback');
 
 app.get('/', function (request, response) {
-  response.send('Eth Faucet Up' + 'Contract address: ' + process.env.FAUCET_CONFIG_MEDXTOKEN_CONTRACT_ADDRESS +
+  response.send('Eth Faucet Up' + 'Contract address: ' + process.env.FAUCET_CONFIG_TOKEN_CONTRACT_ADDRESS +
   'FAUCET Node Url: ' + process.env.FAUCET_CONFIG_ETH_NODE_URL)
 })
 
