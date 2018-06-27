@@ -67,7 +67,7 @@ inventory = ~/.ansible/hosts
 ```bash
 # ~/.ansible/hosts
 [faucet-server]
-faucet
+faucet <elasticIP> ?
 [local]
 localhost ansible_connection=local
 ```
@@ -94,7 +94,7 @@ NOTE: This Ansible playbook needs to run a couple of times.  Once to wait for th
 1. Ensure the **faucet-service.env** file has been configured for a production deploy:
 ```bash
 # faucet-service.env
-Faucet_CONFIG_API_CORS_ORIGINS=["https://hippocrates.netlify.com", "https://app.medcredits.io"]
+FAUCET_CONFIG_API_CORS_ORIGINS=["https://hippocrates.netlify.com", "https://app.medcredits.io"]
 ```
 2. If the server has been setup previously, skip to step 3.  Otherwise setup a new server:
 ```bash
