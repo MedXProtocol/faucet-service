@@ -1,14 +1,22 @@
 version: "3"
 services:
-  # faucet:
-  #   env_file:
-  #     - ../faucet-service.env
-  #   build: './faucet'
-  #   volumes:
-  #     - "/docker/var/faucet/export:/export"
-  #     - "/docker/var/faucet/data:/data/faucet"
-  #   ports:
-  #     - 8080:80
+  redis:
+    build: './redis'
+    volumes:
+      - /docker/var/log/redis:/var/log/redis
+      - /docker/usr/local/var/db/redis:/usr/local/var/db/redis
+  express-server:
+    environment:
+      NODE_ENV: production
+      REDIS_HOST: redis://redis:6379
+    env_file:
+      - ../faucet-service.env
+    build: './express-server'
+    ports:
+      - 8080:8080
+    links:
+      - redis
+      - nginx
   nginx:
     build: './nginx-custom'
     volumes:

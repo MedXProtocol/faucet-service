@@ -10,7 +10,7 @@ var https = require('https');
 // var fs = require('fs');
 var bodyParser = require('body-parser');
 var redis = require('redis');
-var redisClient = redis.createClient(6379);
+var redisClient = redis.createClient(6379, 'redis');
 
 // server
 var app = express();
@@ -23,12 +23,18 @@ app.set('trust proxy', true);
 app.set('trust proxy', 'loopback');
 
 app.get('/', function (req, res) {
-  res.send('Hello World')
+  res.send('Eth Faucet Up' + 'Contract address: ' + process.env.FAUCET_CONFIG_MEDXTOKEN_CONTRACT_ADDRESS +
+  'FAUCET Node Url: ' + process.env.FAUCET_CONFIG_ETH_NODE_URL)
   console.log(req);
-
 })
 
-// app.listen(3000)
-// console.log('listening on 3000')
-http.createServer(app).listen(8080);
-console.log('listening on 8080')
+app.post('/drip/:ethAddress', function (req, res) { // (\d+)0x00000000000000000000000
+  res.send(req.params)
+  console.log(req.params)
+  res.send('Hello World')
+  console.log(req);
+})
+
+http.createServer(app).listen(process.env.PORT || 8080, function() {
+  console.log('Listening on port ' + (process.env.PORT || 8080));
+});
