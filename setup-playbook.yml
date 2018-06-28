@@ -1,5 +1,5 @@
 # Creates a new EC2 instance for the Faucet server.
-# This config expects an Elastic IP to have been defined at 34.230.142.160
+# This config expects an Elastic IP to have been defined at 18.210.76.115
 ---
 - name: Create an EC2 instance
   hosts: local
@@ -10,7 +10,7 @@
         id: faucet-server-v1
         key_name: faucet-key-pair
         image: ami-14c5486b
-        group_id: sg-055149c7d6b300d72
+        group_id: sg-08586a68856e461cb
         instance_type: t2.micro
         region: us-east-1
         state: present
@@ -19,7 +19,7 @@
       ec2_eip:
         allow_reassociation: true
         device_id: "{{ ec2.instance_ids[0] }}"
-        public_ip: 34.230.142.160
+        public_ip: 18.210.76.115
         region: us-east-1
 
 - name: Setup the Faucet server for Docker
@@ -47,10 +47,15 @@
         name: docker
         state: present
 
-    - name: Install docker python module
-      pip:
-        name: docker-compose==1.21.2
-        state: latest
+    - name: "remove chardet / distutils prior to installing docker-compose"
+      command: rm /usr/lib/python2.7/dist-packages/chardet-2.0.1.egg-info && rm -rf /usr/lib/python2.7/dist-packages/chardet
+      become: true
+
+    - name: Install docker compose
+      command: pip install docker-compose
+      become: true
+      tags:
+        - docker
 
     - name: Start Docker Service
       become: yes

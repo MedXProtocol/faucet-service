@@ -1,7 +1,9 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({ path: '../faucet-service.env' })
 }
-var sendSignedTransactionService = require('send-signed-transaction-service');
+console.log(process.env.FAUCET_CONFIG_PRIVKEY)
+console.log('0x975edfccd8918b08f1969ff41e34c99e13c1667cd3b7c155efe124173eded5fc'.length)
+var sendSignedTransactionService = require('./send-signed-transaction-service');
 var request = require('request');
 var http = require('http');
 var https = require('https');
@@ -22,26 +24,27 @@ app.get('/', function (request, response) {
   'FAUCET Node Url: ' + process.env.FAUCET_CONFIG_ETH_NODE_URL)
 })
 
-app.post('/drip/:ethAddress', async function (request, response) { // (\d+)0x00000000000000000000000
-  new Promise(
-    (resolve, reject) => {
-      // await var etherReceipt = sendSignedTransactionService.sendEther(request.params.ethAddress)
-      await var tokenReceipt = sendSignedTransactionService.sendToken(request.params.ethAddress)
+// app.post('/drip/:ethAddress', function (request, response) { // (\d+)0x00000000000000000000000
+//   new Promise(
+//     async (resolve, reject) => {
 
-      if (etherReceipt && tokenReceipt) {
-        console.log('success')
-        resolve('sent!')
-      }
-      else {
-        console.log('error')
-        reject('error!')
-      }
-    }
-  ).then((result, b) => {
-    console.log(result, b)
-    response.send(request.params.ethAddress)
-  })
-})
+//       // var etherReceipt = await sendSignedTransactionService.sendEther(request.params.ethAddress)
+//       var tokenReceipt = await sendSignedTransactionService.sendToken(request.params.ethAddress)
+
+//       if (etherReceipt && tokenReceipt) {
+//         console.log('success')
+//         resolve('sent!')
+//       }
+//       else {
+//         console.log('error')
+//         reject('error!')
+//       }
+//     }
+//   ).then((result, b) => {
+//     console.log(result, b)
+//     response.send(request.params.ethAddress)
+//   })
+// })
 
 http.createServer(app).listen(process.env.PORT || 8080, function() {
   console.log('Listening on port ' + (process.env.PORT || 8080));

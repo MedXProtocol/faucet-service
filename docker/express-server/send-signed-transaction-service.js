@@ -70,7 +70,7 @@ async function buildEtherTxObject(recipientAddress) {
     to: recipientAddress,
     value: web3.utils.toHex(web3.utils.toWei('0.01', 'ether')), // NOTE: adding value to send to contract throws out of gas error
     gas: web3.utils.toHex(21000), // 21000 is expected gas for an ETH value transfer
-    gasPrice: web3.utils.toHex(web3.utils.toWei('23', 'gwei')), // 22 Gwei
+    gasPrice: web3.utils.toHex(web3.utils.toWei('23', 'gwei')),
     from: CONTRACT_OWNER_ADDRESS,
     nonce: nonce
   }
@@ -90,8 +90,8 @@ async function buildContractTxObject(recipientAddress) {
   const txObject = {
     to: CONTRACT_ADDRESS,
     data: data,
-    gas: web3.utils.toHex(132114), // 102114
-    gasPrice: web3.utils.toHex(web3.utils.toWei('92', 'gwei')), // 91 Gwei
+    gas: web3.utils.toHex(132114),
+    gasPrice: web3.utils.toHex(web3.utils.toWei('92', 'gwei')),
     from: CONTRACT_OWNER_ADDRESS,
     nonce: nonce
   }

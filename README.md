@@ -44,14 +44,16 @@ You'll need to acquire the correct EC2 key-pair pem file and set up SSH.  You ca
 
 ```bash
 # ~/.ssh/config
-Host faucet
+Host <18.210.76.115> <-- [Or your elastic IP here]
   StrictHostKeyChecking no
-  HostName 34.230.142.160
+  HostName 18.210.76.115
   User ec2-user
   IdentityFile ~/.ssh/faucet-key-pair.pem
 ```
 
 Note the **Host** is **faucet**.  This is required by the Ansible playbooks.
+
+Make sure to create a new security group before running Ansible, open up SSH for your IP address on that security group, and write the security group's ID in the playbook under: `group_id`
 
 ### Setting up Ansible
 
@@ -67,7 +69,7 @@ inventory = ~/.ansible/hosts
 ```bash
 # ~/.ansible/hosts
 [faucet-server]
-faucet <elasticIP> ?
+<ec2.elastic-ip.here>
 [local]
 localhost ansible_connection=local
 ```
@@ -87,14 +89,14 @@ aws_secret_access_key = ...
 
 Once your credentials have been added, export them into your terminal session.  To easily export any AWS profile to your terminal have a look at this [bash function](https://gist.github.com/asselstine/631eebb5bc2a8b59328e506a1f51f57a).  Otherwise you can simply `export AWS_ACCES...` with cut-and-paste.
 
-The Ansible playbook will update the configuration for the existing server, or create a new one if it doesn't exist.  The playbook expects an Elastic IP to exist with the ip **34.230.142.160**.
+The Ansible playbook will update the configuration for the existing server, or create a new one if it doesn't exist.  The playbook expects an Elastic IP to exist with the ip **18.210.76.115**.
 
 NOTE: This Ansible playbook needs to run a couple of times.  Once to wait for the server to start, another to wait for the docker service.  You'll likely have to run it a couple of times if you're starting from scratch.
 
 1. Ensure the **faucet-service.env** file has been configured for a production deploy:
 ```bash
 # faucet-service.env
-FAUCET_CONFIG_API_CORS_ORIGINS=["https://hippocrates.netlify.com", "https://app.medcredits.io"]
+FAUCET_CONFIG_API_CORS_ORIGINS=["https://hippocrates.medcredits.io"]
 ```
 2. If the server has been setup previously, skip to step 3.  Otherwise setup a new server:
 ```bash
@@ -118,3 +120,5 @@ the 'api' file in the Faucet repo directory.  The docker-compose.yml places this
 
 - [ ] Add a CRON job to renew the certificate
 - [ ] Add to the README how to request the certificate initially
+- [ ] Figure out upgrading pip, used sudo to upgrade it after ssh'ing in
+- [ ] Had to run `sudo ln -s /usr/local/bin/pip /usr/bin/pip` through ssh as sudo couldn't find pip
