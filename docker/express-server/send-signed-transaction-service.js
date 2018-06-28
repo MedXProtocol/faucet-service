@@ -50,18 +50,29 @@ function encodeFunctionCall(recipientAddress) {
 //      "data"      : txData
 // }).then(console.log)
 
+async function nextNonce() {
+  let lastConfirmedTxNonce
+
+  return new Promise((resolve, reject) => {
+    web3.eth.getTransactionCount(CONTRACT_OWNER_ADDRESS)
+      .then(lastConfirmedTxNonce => resolve(lastConfirmedTxNonce + 1))
+      .catch((error) => reject(error))
+  });
+}
+
 async function buildEtherTxObject(recipientAddress) {
-  var nextNonce = await web3.eth.getTransactionCount(CONTRACT_OWNER_ADDRESS)
-    .then(result => result)
-    .catch(console.error);
+  var nonce = await nextNonce();
+  console.log('*************')
+  console.log('nonce: ' + nonce)
+  console.log('*************')
 
   const txObject = {
     to: recipientAddress,
-    value: web3.utils.toHex("1000"), // adding value to send to contract throws out of gas error
+    value: web3.utils.toHex(web3.utils.toWei('0.01', 'ether')), // NOTE: adding value to send to contract throws out of gas error
     gas: web3.utils.toHex(21000), // 21000 is expected gas for an ETH value transfer
-    gasPrice: web3.utils.toHex(22), // 20
+    gasPrice: web3.utils.toHex(web3.utils.toWei('23', 'gwei')), // 22 Gwei
     from: CONTRACT_OWNER_ADDRESS,
-    nonce: nextNonce + 1
+    nonce: nonce
   }
   console.log('buildEtherTxObject: ' + JSON.stringify(txObject, null, 4));
 
@@ -69,11 +80,9 @@ async function buildEtherTxObject(recipientAddress) {
 }
 
 async function buildContractTxObject(recipientAddress) {
-  var nextNonce = await web3.eth.getTransactionCount(CONTRACT_OWNER_ADDRESS)
-    .then(result => result)
-    .catch(console.error);
+  var nonce = await nextNonce();
   console.log('*************')
-  console.log('nextNonce: ' + nextNonce)
+  console.log('nonce: ' + nonce)
   console.log('*************')
 
   let data = encodeFunctionCall(recipientAddress)
@@ -81,10 +90,10 @@ async function buildContractTxObject(recipientAddress) {
   const txObject = {
     to: CONTRACT_ADDRESS,
     data: data,
-    gas: web3.utils.toHex(122114), // 102114
-    gasPrice: web3.utils.toHex(91), // 20
+    gas: web3.utils.toHex(132114), // 102114
+    gasPrice: web3.utils.toHex(web3.utils.toWei('92', 'gwei')), // 91 Gwei
     from: CONTRACT_OWNER_ADDRESS,
-    nonce: nextNonce + 1
+    nonce: nonce
   }
   console.log('built txObject: ' + JSON.stringify(txObject, null, 4));
 
@@ -144,8 +153,8 @@ let sendEtherTransaction = async function(ethAddress) {
 }
 
 const recipientAddress = '0xc5dc4aadf45a8c8cfa5460f2a14175c45ac8528d';
-// console.log(sendSignedTokenTransaction(recipientAddress))
-console.log(sendEtherTransaction(recipientAddress))
+console.log(sendSignedTokenTransaction(recipientAddress))
+// console.log(sendEtherTransaction(recipientAddress))
 
 module.exports = {
   sendEther: sendEtherTransaction,

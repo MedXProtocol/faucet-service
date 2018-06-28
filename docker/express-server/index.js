@@ -2,23 +2,18 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({ path: '../faucet-service.env' })
 }
 var sendSignedTransactionService = require('send-signed-transaction-service');
-var express = require('express');
 var request = require('request');
 var http = require('http');
 var https = require('https');
-// var staticServe = require('serve-static');
-// var fs = require('fs');
 var bodyParser = require('body-parser');
 var redis = require('redis');
 var redisClient = redis.createClient(6379, 'redis');
-
-// server
+var express = require('express');
 var app = express();
 
-app.use(bodyParser.json()); // used for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true }));     // for parsing application/x-www-form-unlencoded
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Read the link below about express behind a proxy
 app.set('trust proxy', true);
 app.set('trust proxy', 'loopback');
 
